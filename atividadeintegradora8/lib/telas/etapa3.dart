@@ -1,16 +1,14 @@
 import 'package:atividadeintegradora8/custompaint.dart';
-import 'package:atividadeintegradora8/telas/etapa2.dart';
 import 'package:flutter/material.dart';
 
-class Etapa1 extends StatefulWidget {
+class Etapa3 extends StatefulWidget {
   bool checked1 = false;
   bool checked2 = false;
-  bool checked3 = false;
   @override
-  _Etapa1State createState() => _Etapa1State();
+  _Etapa3State createState() => _Etapa3State();
 }
 
-class _Etapa1State extends State<Etapa1> {
+class _Etapa3State extends State<Etapa3> {
   @override
   Widget build(BuildContext context) {
     double leftRight = MediaQuery.of(context).size.width * 0.0444;
@@ -67,13 +65,13 @@ class _Etapa1State extends State<Etapa1> {
                 bottomRight: Radius.circular(30),
               )),
           child: Text(
-            "Etapa 1",
+            "Etapa 3",
             style: TextStyle(color: Colors.white, fontSize: 25),
           ),
         ),
         SizedBox(height: 250),
         Text(
-          "Já teve algum diagnóstico confirmado de Covid-19 ?",
+          "Mora ou trabalha com alguém que apresentou diagnóstico para Covid-19, nos últimos 15 dias ?",
           style: TextStyle(fontSize: 20),
         ),
         SizedBox(height: 20),
@@ -106,9 +104,8 @@ class _Etapa1State extends State<Etapa1> {
       ),
       child: Column(
         children: [
-          _checkBoxListTile(1, "Há mais de 15 dias"),
-          _checkBoxListTile(2, "Há menos de 15 dias"),
-          _checkBoxListTile(3, "Nunca teve"),
+          _checkBoxListTile(1, "Sim"),
+          _checkBoxListTile(2, "Não"),
         ],
       ),
     );
@@ -116,9 +113,7 @@ class _Etapa1State extends State<Etapa1> {
 
   Widget _checkBoxListTile(int i, String txt) {
     bool value;
-    (i == 1)
-        ? value = widget.checked1
-        : (i == 2) ? value = widget.checked2 : value = widget.checked3;
+    (i == 1) ? value = widget.checked1 : value = widget.checked2;
 
     return CheckboxListTile(
       activeColor: Color.fromRGBO(76, 64, 153, 1.0),
@@ -127,11 +122,7 @@ class _Etapa1State extends State<Etapa1> {
       onChanged: (bool newValue) {
         setState(() {
           value = newValue;
-          (i == 1)
-              ? widget.checked1 = value
-              : (i == 2)
-                  ? widget.checked2 = newValue
-                  : widget.checked3 = newValue;
+          (i == 1) ? widget.checked1 = value : widget.checked2 = newValue;
         });
       },
       title: Text(
@@ -181,10 +172,7 @@ class _Etapa1State extends State<Etapa1> {
             ),
           ],
         ),
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Etapa2()));
-        },
+        onPressed: () {},
       ),
     );
   }

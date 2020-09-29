@@ -1,16 +1,20 @@
 import 'package:atividadeintegradora8/custompaint.dart';
-import 'package:atividadeintegradora8/telas/etapa2.dart';
+import 'package:atividadeintegradora8/telas/etapa3.dart';
 import 'package:flutter/material.dart';
 
-class Etapa1 extends StatefulWidget {
+class Etapa2 extends StatefulWidget {
   bool checked1 = false;
   bool checked2 = false;
   bool checked3 = false;
+  bool checked4 = false;
+  bool checked5 = false;
+  bool checked6 = false;
+  bool checked7 = false;
   @override
-  _Etapa1State createState() => _Etapa1State();
+  _Etapa2State createState() => _Etapa2State();
 }
 
-class _Etapa1State extends State<Etapa1> {
+class _Etapa2State extends State<Etapa2> {
   @override
   Widget build(BuildContext context) {
     double leftRight = MediaQuery.of(context).size.width * 0.0444;
@@ -25,9 +29,14 @@ class _Etapa1State extends State<Etapa1> {
         ),
         title: _textoCovid(),
       ),
-      body: Container(
-        margin: EdgeInsets.only(left: leftRight, right: leftRight),
-        child: _corpo(),
+      body: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(),
+          child: Container(
+            margin: EdgeInsets.only(left: leftRight, right: leftRight),
+            child: _corpo(),
+          ),
+        ),
       ),
     );
   }
@@ -67,13 +76,13 @@ class _Etapa1State extends State<Etapa1> {
                 bottomRight: Radius.circular(30),
               )),
           child: Text(
-            "Etapa 1",
+            "Etapa 2",
             style: TextStyle(color: Colors.white, fontSize: 25),
           ),
         ),
         SizedBox(height: 250),
         Text(
-          "Já teve algum diagnóstico confirmado de Covid-19 ?",
+          "Apresenta algum dos sintomas abaixo ?",
           style: TextStyle(fontSize: 20),
         ),
         SizedBox(height: 20),
@@ -106,9 +115,13 @@ class _Etapa1State extends State<Etapa1> {
       ),
       child: Column(
         children: [
-          _checkBoxListTile(1, "Há mais de 15 dias"),
-          _checkBoxListTile(2, "Há menos de 15 dias"),
-          _checkBoxListTile(3, "Nunca teve"),
+          _checkBoxListTile(1, "Febre"),
+          _checkBoxListTile(2, "Alteração no paladar"),
+          _checkBoxListTile(3, "Alteração no olfato"),
+          _checkBoxListTile(4, "Falta de ar ou dificuldade para respirar"),
+          _checkBoxListTile(5, "Dor de garganta"),
+          _checkBoxListTile(6, "Diarreia"),
+          _checkBoxListTile(7, "Dor de cabeça"),
         ],
       ),
     );
@@ -118,7 +131,17 @@ class _Etapa1State extends State<Etapa1> {
     bool value;
     (i == 1)
         ? value = widget.checked1
-        : (i == 2) ? value = widget.checked2 : value = widget.checked3;
+        : (i == 2)
+            ? value = widget.checked2
+            : (i == 3)
+                ? value = widget.checked3
+                : (i == 4)
+                    ? value = widget.checked4
+                    : (i == 5)
+                        ? value = widget.checked5
+                        : (i == 6)
+                            ? value = widget.checked6
+                            : value = widget.checked7;
 
     return CheckboxListTile(
       activeColor: Color.fromRGBO(76, 64, 153, 1.0),
@@ -131,7 +154,15 @@ class _Etapa1State extends State<Etapa1> {
               ? widget.checked1 = value
               : (i == 2)
                   ? widget.checked2 = newValue
-                  : widget.checked3 = newValue;
+                  : (i == 3)
+                      ? widget.checked3 = newValue
+                      : (i == 4)
+                          ? widget.checked4 = newValue
+                          : (i == 5)
+                              ? widget.checked5 = newValue
+                              : (i == 6)
+                                  ? widget.checked6 = newValue
+                                  : widget.checked7 = newValue;
         });
       },
       title: Text(
@@ -183,7 +214,7 @@ class _Etapa1State extends State<Etapa1> {
         ),
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Etapa2()));
+              context, MaterialPageRoute(builder: (context) => Etapa3()));
         },
       ),
     );
