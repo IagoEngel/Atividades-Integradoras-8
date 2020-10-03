@@ -71,7 +71,7 @@ class _Etapa3State extends State<Etapa3> {
         ),
         SizedBox(height: 250),
         Text(
-          "Mora ou trabalha com alguém que apresentou diagnóstico para Covid-19, nos últimos 15 dias ?",
+          "Mora ou trabalha com alguém que apresentou diagnóstico positivo para Covid-19, nos últimos 15 dias ?",
           style: TextStyle(fontSize: 20),
         ),
         SizedBox(height: 20),
@@ -172,7 +172,22 @@ class _Etapa3State extends State<Etapa3> {
             ),
           ],
         ),
-        onPressed: () {},
+        onPressed: () async {
+          if ( widget.checked1 == true){
+            await showDialog(
+              context: (context),
+              builder: (context) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  side: BorderSide(color: Colors.deepOrange, width: 10),
+                ),
+                title: Text(
+                    "Você pode estar infectado pelo novo coronavírus, mesmo que não tenha nenhum sintoma. É muito importante que você use máscara sempre e mantenha o distanciamento social para sua proteção e para proteção das outras pessoas. Se apresentar algum sintoma, como tosse, falta de ar, dor de garganta e alteração do olfato ou paladar, procure atendimento médico."),
+              ),
+            );
+          }
+
+        },
       ),
     );
   }

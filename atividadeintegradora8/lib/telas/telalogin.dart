@@ -13,6 +13,7 @@ class _TelaLoginState extends State<TelaLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: double.infinity,
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -29,8 +30,8 @@ class _TelaLoginState extends State<TelaLogin> {
             SizedBox(height: 25),
             Image.asset(
               "assets/images/unifenasLOGO1.png",
-              height: 100,
-              width: 100,
+              height: 120,
+              width: 120,
             ),
             SizedBox(height: 30),
             _textoCovid(),
@@ -39,6 +40,7 @@ class _TelaLoginState extends State<TelaLogin> {
             _botaoCriarConta(),
             SizedBox(height: 5),
             _botaoEntrar(),
+            Container(height: 0),
           ],
         ),
       ),
@@ -78,6 +80,7 @@ class _TelaLoginState extends State<TelaLogin> {
       width: MediaQuery.of(context).size.width * 0.8138,
       child: TextField(
         controller: campoController,
+        obscureText: (campoController == txtSenha) ? true : false,
         style: TextStyle(),
         decoration: InputDecoration(
           enabledBorder: new OutlineInputBorder(
@@ -146,7 +149,25 @@ class _TelaLoginState extends State<TelaLogin> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         child: Text("Entrar", style: TextStyle(fontSize: 23)),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>Etapa1()));
+          if (txtController.text.isNotEmpty && txtSenha.text.isNotEmpty) {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Etapa1()));
+          } else {
+            showDialog(
+              context: (context),
+              builder: (context) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  side: BorderSide(
+                    color: Colors.deepOrange,
+                    width: 10
+                  ),
+                ),
+                title: Text(
+                    "Preencha os campos de matrícula e senha !"),
+              )
+            );
+          }
         },
       ),
     );

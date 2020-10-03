@@ -10,6 +10,7 @@ class Etapa2 extends StatefulWidget {
   bool checked5 = false;
   bool checked6 = false;
   bool checked7 = false;
+  int sintomas = 0;
   @override
   _Etapa2State createState() => _Etapa2State();
 }
@@ -163,6 +164,8 @@ class _Etapa2State extends State<Etapa2> {
                               : (i == 6)
                                   ? widget.checked6 = newValue
                                   : widget.checked7 = newValue;
+
+          (value == false) ? widget.sintomas = 0 : widget.sintomas = 1;
         });
       },
       title: Text(
@@ -212,7 +215,20 @@ class _Etapa2State extends State<Etapa2> {
             ),
           ],
         ),
-        onPressed: () {
+        onPressed: () async {
+          if (widget.sintomas == 1) {
+            await showDialog(
+              context: (context),
+              builder: (context) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  side: BorderSide(color: Colors.deepOrange, width: 10),
+                ),
+                title: Text(
+                    "A presença de um ou mais dessas manifestações pode indicar que você tem alguma doença respiratória que pode ser transmitida para outras pessoas, como a covid-19. Se estiver doente, você pode transmitir sua doença para outras pessoas. Recomenda-se que você máscara, mantenha o distanciamento social e procure atendimento médico o mais breve possível."),
+              ),
+            );
+          }
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => Etapa3()));
         },

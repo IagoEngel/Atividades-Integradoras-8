@@ -127,11 +127,21 @@ class _Etapa1State extends State<Etapa1> {
       onChanged: (bool newValue) {
         setState(() {
           value = newValue;
-          (i == 1)
-              ? widget.checked1 = value
-              : (i == 2)
-                  ? widget.checked2 = newValue
-                  : widget.checked3 = newValue;
+          if (i == 1) {
+            widget.checked1 = newValue;
+            widget.checked2 = !newValue;
+            widget.checked3 = !newValue;
+          } else {
+            if (i == 2) {
+              widget.checked1 = !newValue;
+              widget.checked2 = newValue;
+              widget.checked3 = !newValue;
+            } else {
+              widget.checked1 = !newValue;
+              widget.checked2 = !newValue;
+              widget.checked3 = newValue;
+            }
+          }
         });
       },
       title: Text(
@@ -181,9 +191,37 @@ class _Etapa1State extends State<Etapa1> {
             ),
           ],
         ),
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Etapa2()));
+        onPressed: () async {
+          if (widget.checked2 == true) {
+            await showDialog(
+              context: (context),
+              builder: (context) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  side: BorderSide(color: Colors.deepOrange, width: 10),
+                ),
+                title: Text(
+                    "Recomenda-se que você fique em casa por 14 dias após o diagnóstico da doença, período no qual você pode transmitir a doença para outras pessoas. Fique o tempo todo de máscara, mesmo dentro de casa, limpe as superfícies e lave as mão frequentemente e mantenha uma distância de 1,5 metro de outras pessoas sempre que possível. Mesmo depois de recuperado, você deve usar máscara quando sair de casa e manter o distanciamento social."),
+              ),
+            );
+          }
+          if (widget.checked1 == false &&
+              widget.checked2 == false &&
+              widget.checked3 == false) {
+            showDialog(
+              context: (context),
+              builder: (context) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  side: BorderSide(color: Colors.deepOrange, width: 10),
+                ),
+                title: Text("Selecione uma das opções"),
+              ),
+            );
+          } else {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Etapa2()));
+          }
         },
       ),
     );

@@ -11,8 +11,6 @@ class Fundo extends CustomPainter {
     mainBackground.addRect(Rect.fromLTRB(0, 0, width, height));
     paint.color = Color.fromRGBO(17, 0, 119, 1.0);
     canvas.drawPath(mainBackground, paint);
-    print(size.height);
-    print(size.width);
   }
 
   @override
