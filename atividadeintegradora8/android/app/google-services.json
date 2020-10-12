@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "470361118443",
+    "firebase_url": "https://atividades-integradoras-8.firebaseio.com",
+    "project_id": "atividades-integradoras-8",
+    "storage_bucket": "atividades-integradoras-8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:470361118443:android:ecdbe8092d03b880a410ae",
+        "android_client_info": {
+          "package_name": "atividades.integradoras.viii"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "470361118443-c818f50qq69b7m8fi6aclh9ulbjihfpq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDywlVBlwqwQn4be0Mgra7ySj3rRlwpDNE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "470361118443-c818f50qq69b7m8fi6aclh9ulbjihfpq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

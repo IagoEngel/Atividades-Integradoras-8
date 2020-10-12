@@ -1,4 +1,7 @@
+import 'package:atividadeintegradora8/models/usuario.dart';
+import 'package:atividadeintegradora8/services/auth.dart';
 import 'package:atividadeintegradora8/telas/etapa1.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class TelaLogin extends StatefulWidget {
@@ -7,6 +10,7 @@ class TelaLogin extends StatefulWidget {
 }
 
 class _TelaLoginState extends State<TelaLogin> {
+  final AuthService _auth = AuthService();
   TextEditingController txtController = new TextEditingController();
   TextEditingController txtSenha = new TextEditingController();
 
@@ -105,7 +109,7 @@ class _TelaLoginState extends State<TelaLogin> {
       children: [
         SizedBox(height: 100),
         Text(
-          "Digite sua Matrícula",
+          "Digite seu email",
           style: TextStyle(fontSize: 25, color: Colors.white),
         ),
         SizedBox(height: 15),
@@ -148,28 +152,52 @@ class _TelaLoginState extends State<TelaLogin> {
         elevation: 0.0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         child: Text("Entrar", style: TextStyle(fontSize: 23)),
-        onPressed: () {
-          if (txtController.text.isNotEmpty && txtSenha.text.isNotEmpty) {
+        onPressed: () async {
+          dynamic result =
+              await _auth.signInEmailPasswd(txtController.text, txtSenha.text);
+          if (txtController.text.isNotEmpty &&
+              txtSenha.text.isNotEmpty &&
+              result != null) {
+            Usuario usuario = new Usuario();
+            await _getUsuario(result.uid).then((QuerySnapshot docs) {
+              usuario.nome = docs.documents[0].data['nome'];
+              usuario.email = docs.documents[0].data['email'];
+              usuario.dataNasc = docs.documents[0].data['dataNasc'];
+              usuario.sexo = docs.documents[0].data['sexo'];
+              usuario.telefone = docs.documents[0].data['telefone'];
+              usuario.curso = docs.documents[0].data['curso'];
+              usuario.matricula = docs.documents[0].data['matricula'];
+              usuario.periodo = docs.documents[0].data['periodo'];
+              usuario.estado = docs.documents[0].data['estado'];
+              usuario.cidade = docs.documents[0].data['cidade'];
+              usuario.bairro = docs.documents[0].data['bairro'];
+              usuario.rua = docs.documents[0].data['rua'];
+              usuario.ncasa = docs.documents[0].data['ncasa'];
+              usuario.cep = docs.documents[0].data['cep'];
+              usuario.uid = docs.documents[0].data['uid'];
+            });
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => Etapa1()));
           } else {
             showDialog(
-              context: (context),
-              builder: (context) => AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  side: BorderSide(
-                    color: Colors.deepOrange,
-                    width: 10
-                  ),
-                ),
-                title: Text(
-                    "Preencha os campos de matrícula e senha !"),
-              )
-            );
+                context: (context),
+                builder: (context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        side: BorderSide(color: Colors.deepOrange, width: 10),
+                      ),
+                      title: Text("Preencha os campos de matrícula e senha !"),
+                    ));
           }
         },
       ),
     );
+  }
+
+  _getUsuario(String uid) {
+    return Firestore.instance
+        .collection('usuario')
+        .where('uid', isEqualTo: uid)
+        .getDocuments();
   }
 }

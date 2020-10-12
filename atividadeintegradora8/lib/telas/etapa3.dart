@@ -186,7 +186,6 @@ class _Etapa3State extends State<Etapa3> {
               ),
             );
           }
-
         },
       ),
     );
