@@ -25,9 +25,14 @@ class _Etapa1State extends State<Etapa1> {
         ),
         title: _textoCovid(),
       ),
-      body: Container(
-        margin: EdgeInsets.only(left: leftRight, right: leftRight),
-        child: _corpo(),
+      body: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(),
+          child: Container(
+            margin: EdgeInsets.only(left: leftRight, right: leftRight),
+            child: _corpo(),
+          ),
+        ),
       ),
     );
   }

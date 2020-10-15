@@ -1,5 +1,6 @@
 import 'package:atividadeintegradora8/models/usuario.dart';
 import 'package:atividadeintegradora8/services/auth.dart';
+import 'package:atividadeintegradora8/telas/cadastro.dart';
 import 'package:atividadeintegradora8/telas/etapa1.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,7 @@ class _TelaLoginState extends State<TelaLogin> {
       child: TextField(
         controller: campoController,
         obscureText: (campoController == txtSenha) ? true : false,
-        style: TextStyle(),
+        style: TextStyle(fontSize: 20),
         decoration: InputDecoration(
           enabledBorder: new OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
@@ -136,7 +137,9 @@ class _TelaLoginState extends State<TelaLogin> {
         elevation: 0.0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         child: Text("Crie sua conta", style: TextStyle(fontSize: 23)),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Cadastro()));
+        },
       ),
     );
   }

@@ -97,6 +97,7 @@ class _Etapa2State extends State<Etapa2> {
             _botaoProximo(),
           ],
         ),
+        SizedBox(height: 40),
       ],
     );
   }

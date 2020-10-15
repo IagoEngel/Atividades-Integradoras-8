@@ -23,9 +23,14 @@ class _Etapa3State extends State<Etapa3> {
         ),
         title: _textoCovid(),
       ),
-      body: Container(
-        margin: EdgeInsets.only(left: leftRight, right: leftRight),
-        child: _corpo(),
+      body: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(),
+          child: Container(
+            margin: EdgeInsets.only(left: leftRight, right: leftRight),
+            child: _corpo(),
+          ),
+        ),
       ),
     );
   }
@@ -173,7 +178,7 @@ class _Etapa3State extends State<Etapa3> {
           ],
         ),
         onPressed: () async {
-          if ( widget.checked1 == true){
+          if (widget.checked1 == true) {
             await showDialog(
               context: (context),
               builder: (context) => AlertDialog(
