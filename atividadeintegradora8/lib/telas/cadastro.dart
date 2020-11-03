@@ -1,11 +1,34 @@
 import 'package:atividadeintegradora8/models/usuario.dart';
 import 'package:atividadeintegradora8/repository/datauser.dart';
 import 'package:atividadeintegradora8/services/auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Cadastro extends StatefulWidget {
   var sexo = ['Masculino', 'Feminino'];
+  var cursos = [
+    'Administração',
+    'Agronomia',
+    'Arquitetura e Urbanismo',
+    'Biomedicina',
+    'Ciência da Computação',
+    'Ciências Contábeis',
+    'Direito',
+    'Educação Física',
+    'Enfermagem',
+    'Engenharia Civil',
+    'Estética e Cosmética',
+    'Farmácia',
+    'Fisioterapia',
+    'Gastronomia',
+    'Medicina',
+    'Nutrição',
+    'Odontologia',
+    'Pedagogia',
+    'Psicologia',
+    'Veterinária',
+  ];
+  var _currentCurso;
   var _currentS;
 
   @override
@@ -20,9 +43,8 @@ class _CadastroState extends State<Cadastro> {
   //INFORMAÇÕES PESSOA
   var uid;
   TextEditingController txtNome = new TextEditingController();
-  TextEditingController txtData = new TextEditingController();
+  TextEditingController txtIdade = new TextEditingController();
   TextEditingController txtEmail = new TextEditingController();
-  TextEditingController txtCurso = new TextEditingController();
   TextEditingController txtPeriodo = new TextEditingController();
   TextEditingController txtTelefone = new TextEditingController();
   TextEditingController txtMatricula = new TextEditingController();
@@ -72,15 +94,22 @@ class _CadastroState extends State<Cadastro> {
                     style: TextStyle(color: Colors.white, fontSize: 25),
                   ),
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 30),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Informações Gerais:",
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
                 _txtField(txtNome, "Nome completo", TextInputType.name),
-                _txtField(
-                    txtData, "Data de nascimento", TextInputType.datetime),
+                _txtField(txtIdade, "Idade", TextInputType.number),
                 SizedBox(height: 15),
                 _dropdownSexo(),
                 _txtField(txtEmail, "Email", TextInputType.emailAddress),
-                _txtField(txtCurso, "Curso", TextInputType.name),
-                _txtField(txtPeriodo, "Periodo", TextInputType.number),
+                SizedBox(height: 15),
+                _dropdownCurso(),
+                _txtField(txtPeriodo, "Período", TextInputType.number),
                 _txtField(txtTelefone, "Telefone", TextInputType.phone),
                 _txtField(txtMatricula, "Matrícula", TextInputType.number),
                 Container(
@@ -98,16 +127,28 @@ class _CadastroState extends State<Cadastro> {
                 _txtField(txtEstado, "Estado", TextInputType.name),
                 _txtField(txtCidade, "Cidade", TextInputType.name),
                 _txtField(txtBairro, "Bairro", TextInputType.name),
-                _txtField(txtRua, "Rua", TextInputType.name),
-                _txtField(txtNCasa, "Nº casa", TextInputType.number),
-                _txtField(txtCep, "CEP", TextInputType.number),
                 Container(
                   margin: EdgeInsets.only(top: 20, bottom: 5),
                   child: Divider(color: Colors.grey, thickness: 3),
                 ),
-                _txtField(txtSenha, "Senha", TextInputType.text),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Senha:",
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
+                _txtField(txtSenha, "", TextInputType.text),
+                SizedBox(height: 15),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Confirmar Senha:",
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
                 _txtField(
-                    txtConfirmaSenha, "Confirmar Senha", TextInputType.text),
+                    txtConfirmaSenha, "", TextInputType.text),
                 _botaoConfirmar(),
               ],
             ),
@@ -141,10 +182,23 @@ class _CadastroState extends State<Cadastro> {
   Widget _txtField(
       TextEditingController txtController, String hint, TextInputType tipo) {
     bool esconder;
-    (hint == "Senha" || hint == "Confirmar Senha") ? esconder = true : esconder = false;
+    (hint == "")
+        ? esconder = true
+        : esconder = false;
+
     return Container(
       margin: EdgeInsets.only(top: 15),
       child: TextField(
+        inputFormatters: [
+          if (hint == "Estado") UpperCase(),
+          if (hint == "Cidade") UpperCase(),
+          if (hint == "Bairro") UpperCase(),
+          if (hint == "Idade")
+            FilteringTextInputFormatter.allow(RegExp(r"[0-9]")),
+          if (hint == "Idade") LengthLimitingTextInputFormatter(2),
+          if (hint == "Período") LengthLimitingTextInputFormatter(2),
+          if (hint == "Matrícula") LengthLimitingTextInputFormatter(9),
+        ],
         controller: txtController,
         style: TextStyle(fontSize: 20),
         keyboardType: tipo,
@@ -191,7 +245,7 @@ class _CadastroState extends State<Cadastro> {
               value: widget._currentS,
               hint: Text(
                 'Sexo',
-                style: TextStyle(color: Colors.black, fontSize: 20),
+                style: TextStyle(color: Colors.black54, fontSize: 20),
               ),
               isDense: true,
               onChanged: (String newValue) {
@@ -203,6 +257,58 @@ class _CadastroState extends State<Cadastro> {
               dropdownColor: Colors.white,
               style: TextStyle(fontSize: 20),
               items: widget.sexo.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    style: TextStyle(color: Colors.black),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _dropdownCurso() {
+    return FormField<String>(
+      builder: (FormFieldState<String> state) {
+        return InputDecorator(
+          decoration: InputDecoration(
+            hintStyle: TextStyle(fontSize: 20),
+            enabledBorder: new OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black, width: 3),
+            ),
+            border: new OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black, width: 3),
+            ),
+            focusedBorder: new OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black, width: 3),
+            ),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              icon: Icon(
+                Icons.keyboard_arrow_down,
+                color: Colors.black,
+              ),
+              value: widget._currentCurso,
+              hint: Text(
+                'Curso',
+                style: TextStyle(color: Colors.black54, fontSize: 20),
+              ),
+              isDense: true,
+              onChanged: (String newValue) {
+                setState(() {
+                  widget._currentCurso = newValue;
+                  state.didChange(newValue);
+                });
+              },
+              dropdownColor: Colors.white,
+              style: TextStyle(fontSize: 20),
+              items: widget.cursos.map((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(
@@ -250,18 +356,14 @@ class _CadastroState extends State<Cadastro> {
             Usuario(
               nome: txtNome.text,
               email: txtEmail.text,
-              dataNasc: txtData.text,
+              idade: int.parse(txtIdade.text),
               sexo: (widget._currentS == 'Masculino') ? false : true,
-              telefone: txtTelefone.text,
-              curso: txtCurso.text,
+              curso: widget._currentCurso,
               matricula: txtMatricula.text,
               periodo: int.parse(txtPeriodo.text),
               estado: txtEstado.text,
               cidade: txtCidade.text,
               bairro: txtBairro.text,
-              rua: txtRua.text,
-              ncasa: txtNCasa.text,
-              cep: txtCep.text,
               uid: uid,
             ),
           );
@@ -284,5 +386,16 @@ class _CadastroState extends State<Cadastro> {
   _getUID(String email, String passwd) async {
     dynamic result = await authService.signInEmailPasswd(email, passwd);
     uid = result.uid;
+  }
+}
+
+class UpperCase extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
+    );
   }
 }

@@ -1,16 +1,24 @@
 import 'package:atividadeintegradora8/custompaint.dart';
+import 'package:atividadeintegradora8/models/relatorio.dart';
 import 'package:atividadeintegradora8/telas/etapa2.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Etapa1 extends StatefulWidget {
   bool checked1 = false;
   bool checked2 = false;
   bool checked3 = false;
+  String uid;
+
+  Etapa1(this.uid);
+
   @override
   _Etapa1State createState() => _Etapa1State();
 }
 
 class _Etapa1State extends State<Etapa1> {
+  Relatorio relatorio = new Relatorio();
+
   @override
   Widget build(BuildContext context) {
     double leftRight = MediaQuery.of(context).size.width * 0.0444;
@@ -123,7 +131,9 @@ class _Etapa1State extends State<Etapa1> {
     bool value;
     (i == 1)
         ? value = widget.checked1
-        : (i == 2) ? value = widget.checked2 : value = widget.checked3;
+        : (i == 2)
+            ? value = widget.checked2
+            : value = widget.checked3;
 
     return CheckboxListTile(
       activeColor: Color.fromRGBO(76, 64, 153, 1.0),
@@ -224,11 +234,21 @@ class _Etapa1State extends State<Etapa1> {
               ),
             );
           } else {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Etapa2()));
+            await _update();
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => Etapa2(relatorio)));
           }
         },
       ),
     );
+  }
+
+  Future _update() {
+    relatorio.uid = widget.uid;
+    (widget.checked1 == true)
+        ? relatorio.diagnostico = "Há mais de 15 dias"
+        : (widget.checked2 == true)
+            ? relatorio.diagnostico = "Há menos de 15 dias"
+            : relatorio.diagnostico = "Nunca teve";
   }
 }

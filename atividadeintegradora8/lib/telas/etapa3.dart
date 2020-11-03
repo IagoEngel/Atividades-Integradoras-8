@@ -1,14 +1,22 @@
 import 'package:atividadeintegradora8/custompaint.dart';
+import 'package:atividadeintegradora8/models/relatorio.dart';
+import 'package:atividadeintegradora8/repository/datarelatorio.dart';
 import 'package:flutter/material.dart';
 
 class Etapa3 extends StatefulWidget {
   bool checked1 = false;
   bool checked2 = false;
+  Relatorio relatorio;
+
+  Etapa3(this.relatorio);
+
   @override
   _Etapa3State createState() => _Etapa3State();
 }
 
 class _Etapa3State extends State<Etapa3> {
+  RelatorioRepository relatorioRepository = new RelatorioRepository();
+
   @override
   Widget build(BuildContext context) {
     double leftRight = MediaQuery.of(context).size.width * 0.0444;
@@ -179,6 +187,7 @@ class _Etapa3State extends State<Etapa3> {
         ),
         onPressed: () async {
           if (widget.checked1 == true) {
+            await _update();
             await showDialog(
               context: (context),
               builder: (context) => AlertDialog(
@@ -191,8 +200,20 @@ class _Etapa3State extends State<Etapa3> {
               ),
             );
           }
+          await _update();
         },
       ),
     );
+  }
+
+  Future _update() {
+    String dia = DateTime.now().day.toString();
+    String mes = DateTime.now().month.toString();
+    String ano = DateTime.now().year.toString();
+    (widget.checked1 == true)
+        ? widget.relatorio.moraOuTrabalha = true
+        : widget.relatorio.moraOuTrabalha = false;
+    widget.relatorio.data = dia + "/" + mes + "/" + ano;
+    relatorioRepository.addRelatorio(widget.relatorio);
   }
 }

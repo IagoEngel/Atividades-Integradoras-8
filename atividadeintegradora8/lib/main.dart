@@ -1,4 +1,3 @@
-import 'package:atividadeintegradora8/telas/etapa1.dart';
 import 'package:atividadeintegradora8/telas/telalogin.dart';
 import 'package:flutter/material.dart';
 

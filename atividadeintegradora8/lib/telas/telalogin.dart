@@ -165,22 +165,18 @@ class _TelaLoginState extends State<TelaLogin> {
             await _getUsuario(result.uid).then((QuerySnapshot docs) {
               usuario.nome = docs.documents[0].data['nome'];
               usuario.email = docs.documents[0].data['email'];
-              usuario.dataNasc = docs.documents[0].data['dataNasc'];
+              usuario.idade = docs.documents[0].data['idade'];
               usuario.sexo = docs.documents[0].data['sexo'];
-              usuario.telefone = docs.documents[0].data['telefone'];
               usuario.curso = docs.documents[0].data['curso'];
               usuario.matricula = docs.documents[0].data['matricula'];
               usuario.periodo = docs.documents[0].data['periodo'];
               usuario.estado = docs.documents[0].data['estado'];
               usuario.cidade = docs.documents[0].data['cidade'];
               usuario.bairro = docs.documents[0].data['bairro'];
-              usuario.rua = docs.documents[0].data['rua'];
-              usuario.ncasa = docs.documents[0].data['ncasa'];
-              usuario.cep = docs.documents[0].data['cep'];
               usuario.uid = docs.documents[0].data['uid'];
             });
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Etapa1()));
+                context, MaterialPageRoute(builder: (context) => Etapa1(usuario.uid)));
           } else {
             showDialog(
                 context: (context),

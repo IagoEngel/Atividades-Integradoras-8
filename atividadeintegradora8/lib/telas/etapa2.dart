@@ -1,5 +1,7 @@
 import 'package:atividadeintegradora8/custompaint.dart';
+import 'package:atividadeintegradora8/models/relatorio.dart';
 import 'package:atividadeintegradora8/telas/etapa3.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Etapa2 extends StatefulWidget {
@@ -11,11 +13,18 @@ class Etapa2 extends StatefulWidget {
   bool checked6 = false;
   bool checked7 = false;
   int sintomas = 0;
+
+  Relatorio relatorio;
+
+  Etapa2(this.relatorio);
+
   @override
   _Etapa2State createState() => _Etapa2State();
 }
 
 class _Etapa2State extends State<Etapa2> {
+  List<String> sintomas = new List<String>();
+
   @override
   Widget build(BuildContext context) {
     double leftRight = MediaQuery.of(context).size.width * 0.0444;
@@ -230,10 +239,23 @@ class _Etapa2State extends State<Etapa2> {
               ),
             );
           }
+          await _update();
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Etapa3()));
+              context, MaterialPageRoute(builder: (context) => Etapa3(widget.relatorio)));
         },
       ),
     );
   }
+
+  Future _update() {
+    if (widget.checked1 == true) sintomas.add("Febre");
+    if (widget.checked2 == true) sintomas.add("Alteração no paladar");
+    if (widget.checked3 == true) sintomas.add("Alteração no olfato");
+    if (widget.checked4 == true) sintomas.add("Falta de ar ou dificuldade para respirar");
+    if (widget.checked5 == true) sintomas.add("Dor de garganta");
+    if (widget.checked6 == true) sintomas.add("Diarreia");
+    if (widget.checked7 == true) sintomas.add("Dor de cabeça");
+    widget.relatorio.sintomas = sintomas;
+  }
+
 }
