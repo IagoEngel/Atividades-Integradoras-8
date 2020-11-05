@@ -23,6 +23,7 @@ class _Etapa1State extends State<Etapa1> {
   @override
   Widget build(BuildContext context) {
     double leftRight = MediaQuery.of(context).size.width * 0.0444;
+    Size celular = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +40,7 @@ class _Etapa1State extends State<Etapa1> {
           constraints: BoxConstraints(),
           child: Container(
             margin: EdgeInsets.only(left: leftRight, right: leftRight),
-            child: _corpo(),
+            child: _corpo(leftRight, celular),
           ),
         ),
       ),
@@ -67,7 +68,7 @@ class _Etapa1State extends State<Etapa1> {
     );
   }
 
-  Widget _corpo() {
+  Widget _corpo(double paddingTela, Size celular) {
     double heightContainer = MediaQuery.of(context).size.height * 0.0375;
     return Column(
       children: [
@@ -85,21 +86,38 @@ class _Etapa1State extends State<Etapa1> {
             style: TextStyle(color: Colors.white, fontSize: 25),
           ),
         ),
-        SizedBox(height: 250),
+        Container(
+          margin: EdgeInsets.only(top: 20, bottom: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0,2.5),
+                color: Colors.black45,
+                blurRadius: 2.0,
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: Image.asset("assets/images/covidDoctor2.jpg"),
+          ),
+        ),
         Text(
           "Já teve algum diagnóstico confirmado de Covid-19 ?",
           style: TextStyle(fontSize: 20),
         ),
         SizedBox(height: 20),
         _check(),
-        SizedBox(height: 50),
-        Stack(
-          children: [
-            CustomPaint(
-              painter: Fundo(),
-            ),
-            _botaoProximo(),
-          ],
+        SizedBox(height: 70),
+        CustomPaint(
+          painter: Fundo(paddingTela, celular),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _botaoProximo(),
+            ],
+          ),
         ),
       ],
     );
@@ -284,8 +302,7 @@ class _Etapa1State extends State<Etapa1> {
     relatorio.data = dia + "/" + mes + "/" + ano;
   }
 
-  Future _relatorio(){
+  Future _relatorio() {
     relatorioRepository.addRelatorio(relatorio);
   }
-
 }

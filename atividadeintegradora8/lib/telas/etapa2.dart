@@ -1,7 +1,6 @@
 import 'package:atividadeintegradora8/custompaint.dart';
 import 'package:atividadeintegradora8/models/relatorio.dart';
 import 'package:atividadeintegradora8/telas/etapa3.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Etapa2 extends StatefulWidget {
@@ -28,6 +27,7 @@ class _Etapa2State extends State<Etapa2> {
   @override
   Widget build(BuildContext context) {
     double leftRight = MediaQuery.of(context).size.width * 0.0444;
+    Size celular = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +44,7 @@ class _Etapa2State extends State<Etapa2> {
           constraints: BoxConstraints(),
           child: Container(
             margin: EdgeInsets.only(left: leftRight, right: leftRight),
-            child: _corpo(),
+            child: _corpo(leftRight, celular),
           ),
         ),
       ),
@@ -72,7 +72,7 @@ class _Etapa2State extends State<Etapa2> {
     );
   }
 
-  Widget _corpo() {
+  Widget _corpo(double paddingTela, Size celular) {
     double heightContainer = MediaQuery.of(context).size.height * 0.0375;
     return Column(
       children: [
@@ -90,7 +90,23 @@ class _Etapa2State extends State<Etapa2> {
             style: TextStyle(color: Colors.white, fontSize: 25),
           ),
         ),
-        SizedBox(height: 250),
+        Container(
+          margin: EdgeInsets.only(top: 20, bottom: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0,2.5),
+                color: Colors.black45,
+                blurRadius: 2.0,
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: Image.asset("assets/images/covid1.jpg"),
+          ),
+        ),
         Text(
           "Apresenta algum dos sintomas abaixo ?",
           style: TextStyle(fontSize: 20),
@@ -98,13 +114,14 @@ class _Etapa2State extends State<Etapa2> {
         SizedBox(height: 20),
         _check(),
         SizedBox(height: 50),
-        Stack(
-          children: [
-            CustomPaint(
-              painter: Fundo(),
-            ),
-            _botaoProximo(),
-          ],
+        CustomPaint(
+          painter: Fundo(paddingTela, celular),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _botaoProximo(),
+            ],
+          ),
         ),
         SizedBox(height: 40),
       ],

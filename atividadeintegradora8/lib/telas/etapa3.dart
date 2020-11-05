@@ -20,6 +20,7 @@ class _Etapa3State extends State<Etapa3> {
   @override
   Widget build(BuildContext context) {
     double leftRight = MediaQuery.of(context).size.width * 0.0444;
+    Size celular = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -36,7 +37,7 @@ class _Etapa3State extends State<Etapa3> {
           constraints: BoxConstraints(),
           child: Container(
             margin: EdgeInsets.only(left: leftRight, right: leftRight),
-            child: _corpo(),
+            child: _corpo(leftRight, celular),
           ),
         ),
       ),
@@ -64,7 +65,7 @@ class _Etapa3State extends State<Etapa3> {
     );
   }
 
-  Widget _corpo() {
+  Widget _corpo(double paddingTela, Size celular) {
     double heightContainer = MediaQuery.of(context).size.height * 0.0375;
     return Column(
       children: [
@@ -82,21 +83,38 @@ class _Etapa3State extends State<Etapa3> {
             style: TextStyle(color: Colors.white, fontSize: 25),
           ),
         ),
-        SizedBox(height: 250),
+        Container(
+          margin: EdgeInsets.only(top: 20, bottom: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0,2.5),
+                color: Colors.black45,
+                blurRadius: 2.0,
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: Image.asset("assets/images/covidCrowded1.jpg"),
+          ),
+        ),
         Text(
           "Mora ou trabalha com alguém que apresentou diagnóstico positivo para Covid-19, nos últimos 15 dias ?",
           style: TextStyle(fontSize: 20),
         ),
         SizedBox(height: 20),
         _check(),
-        SizedBox(height: 50),
-        Stack(
-          children: [
-            CustomPaint(
-              painter: Fundo(),
-            ),
-            _botaoProximo(),
-          ],
+        SizedBox(height: 80),
+        CustomPaint(
+          painter: Fundo(paddingTela, celular),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _botaoProximo(),
+            ],
+          ),
         ),
       ],
     );
