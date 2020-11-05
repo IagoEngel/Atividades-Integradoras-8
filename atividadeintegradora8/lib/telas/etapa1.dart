@@ -1,7 +1,7 @@
 import 'package:atividadeintegradora8/custompaint.dart';
 import 'package:atividadeintegradora8/models/relatorio.dart';
+import 'package:atividadeintegradora8/repository/datarelatorio.dart';
 import 'package:atividadeintegradora8/telas/etapa2.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Etapa1 extends StatefulWidget {
@@ -18,6 +18,7 @@ class Etapa1 extends StatefulWidget {
 
 class _Etapa1State extends State<Etapa1> {
   Relatorio relatorio = new Relatorio();
+  RelatorioRepository relatorioRepository = new RelatorioRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -207,19 +208,6 @@ class _Etapa1State extends State<Etapa1> {
           ],
         ),
         onPressed: () async {
-          if (widget.checked2 == true) {
-            await showDialog(
-              context: (context),
-              builder: (context) => AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  side: BorderSide(color: Colors.deepOrange, width: 10),
-                ),
-                title: Text(
-                    "Recomenda-se que você fique em casa por 14 dias após o diagnóstico da doença, período no qual você pode transmitir a doença para outras pessoas. Fique o tempo todo de máscara, mesmo dentro de casa, limpe as superfícies e lave as mão frequentemente e mantenha uma distância de 1,5 metro de outras pessoas sempre que possível. Mesmo depois de recuperado, você deve usar máscara quando sair de casa e manter o distanciamento social."),
-              ),
-            );
-          }
           if (widget.checked1 == false &&
               widget.checked2 == false &&
               widget.checked3 == false) {
@@ -228,15 +216,52 @@ class _Etapa1State extends State<Etapa1> {
               builder: (context) => AlertDialog(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
-                  side: BorderSide(color: Colors.deepOrange, width: 10),
+                  side: BorderSide(
+                      color: Color.fromRGBO(17, 0, 119, 1.0), width: 5),
                 ),
                 title: Text("Selecione uma das opções"),
               ),
             );
           } else {
-            await _update();
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Etapa2(relatorio)));
+            if (widget.checked2 == true) {
+              await showDialog(
+                context: (context),
+                builder: (context) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    side: BorderSide(
+                        color: Color.fromRGBO(17, 0, 119, 1.0), width: 5),
+                  ),
+                  title: Text(
+                    "Recomenda-se que você fique em casa por 14 dias após o diagnóstico da doença, período no qual você pode transmitir a doença para outras pessoas.",
+                    textAlign: TextAlign.justify,
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Divider(
+                        thickness: 3,
+                        endIndent: 5,
+                        indent: 5,
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "Fique o tempo todo de máscara, mesmo dentro de casa, limpe as superfícies e lave as mão frequentemente e mantenha uma distância de 1,5 metro de outras pessoas sempre que possível. Mesmo depois de recuperado, você deve usar máscara quando sair de casa e manter o distanciamento social.",
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+              await _update();
+              await _relatorio();
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            } else {
+              await _update();
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Etapa2(relatorio)));
+            }
           }
         },
       ),
@@ -250,5 +275,17 @@ class _Etapa1State extends State<Etapa1> {
         : (widget.checked2 == true)
             ? relatorio.diagnostico = "Há menos de 15 dias"
             : relatorio.diagnostico = "Nunca teve";
+    String dia = DateTime.now().day.toString();
+    String mes = DateTime.now().month.toString();
+    String ano = DateTime.now().year.toString();
+    (widget.checked1 == true)
+        ? relatorio.moraOuTrabalha = true
+        : relatorio.moraOuTrabalha = false;
+    relatorio.data = dia + "/" + mes + "/" + ano;
   }
+
+  Future _relatorio(){
+    relatorioRepository.addRelatorio(relatorio);
+  }
+
 }

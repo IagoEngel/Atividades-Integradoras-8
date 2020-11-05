@@ -232,16 +232,37 @@ class _Etapa2State extends State<Etapa2> {
               builder: (context) => AlertDialog(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
-                  side: BorderSide(color: Colors.deepOrange, width: 10),
+                  side: BorderSide(
+                      color: Color.fromRGBO(17, 0, 119, 1.0), width: 5),
                 ),
                 title: Text(
-                    "A presença de um ou mais dessas manifestações pode indicar que você tem alguma doença respiratória que pode ser transmitida para outras pessoas, como a covid-19. Se estiver doente, você pode transmitir sua doença para outras pessoas. Recomenda-se que você máscara, mantenha o distanciamento social e procure atendimento médico o mais breve possível."),
+                  "A presença de um ou mais dessas manifestações pode indicar que você tem alguma doença respiratória que pode ser transmitida para outras pessoas, como a covid-19.",
+                  textAlign: TextAlign.justify,
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Divider(
+                      thickness: 3,
+                      endIndent: 5,
+                      indent: 5,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "Se estiver doente, você pode transmitir sua doença para outras pessoas. Recomenda-se que você máscara, mantenha o distanciamento social e procure atendimento médico o mais breve possível.",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
               ),
             );
           }
           await _update();
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Etapa3(widget.relatorio)));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Etapa3(widget.relatorio)));
         },
       ),
     );
@@ -251,11 +272,11 @@ class _Etapa2State extends State<Etapa2> {
     if (widget.checked1 == true) sintomas.add("Febre");
     if (widget.checked2 == true) sintomas.add("Alteração no paladar");
     if (widget.checked3 == true) sintomas.add("Alteração no olfato");
-    if (widget.checked4 == true) sintomas.add("Falta de ar ou dificuldade para respirar");
+    if (widget.checked4 == true)
+      sintomas.add("Falta de ar ou dificuldade para respirar");
     if (widget.checked5 == true) sintomas.add("Dor de garganta");
     if (widget.checked6 == true) sintomas.add("Diarreia");
     if (widget.checked7 == true) sintomas.add("Dor de cabeça");
     widget.relatorio.sintomas = sintomas;
   }
-
 }

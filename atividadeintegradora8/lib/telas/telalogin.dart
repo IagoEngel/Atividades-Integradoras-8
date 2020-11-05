@@ -19,34 +19,40 @@ class _TelaLoginState extends State<TelaLogin> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-        width: double.infinity,
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-              Color.fromRGBO(17, 0, 119, 1.0),
-              Color.fromRGBO(166, 160, 204, 1.0),
-            ])),
-        child: Column(
-          children: [
-            SizedBox(height: 25),
-            Image.asset(
-              "assets/images/unifenasLOGO1.png",
-              height: 120,
-              width: 120,
+      body: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints:
+              BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                  Color.fromRGBO(17, 0, 119, 1.0),
+                  Color.fromRGBO(166, 160, 204, 1.0),
+                ])),
+            child: Column(
+              children: [
+                SizedBox(height: 25),
+                Image.asset(
+                  "assets/images/unifenasLOGO1.png",
+                  height: 120,
+                  width: 120,
+                ),
+                SizedBox(height: 30),
+                _textoCovid(),
+                _textFields(),
+                SizedBox(height: 80),
+                _botaoCriarConta(),
+                SizedBox(height: 5),
+                _botaoEntrar(),
+                SizedBox(height: 30)
+              ],
             ),
-            SizedBox(height: 30),
-            _textoCovid(),
-            _textFields(),
-            SizedBox(height: 80),
-            _botaoCriarConta(),
-            SizedBox(height: 5),
-            _botaoEntrar(),
-            Container(height: 0),
-          ],
+          ),
         ),
       ),
     );
@@ -138,7 +144,8 @@ class _TelaLoginState extends State<TelaLogin> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         child: Text("Crie sua conta", style: TextStyle(fontSize: 23)),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Cadastro()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Cadastro()));
         },
       ),
     );
@@ -175,8 +182,8 @@ class _TelaLoginState extends State<TelaLogin> {
               usuario.bairro = docs.documents[0].data['bairro'];
               usuario.uid = docs.documents[0].data['uid'];
             });
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Etapa1(usuario.uid)));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => Etapa1(usuario.uid)));
           } else {
             showDialog(
                 context: (context),
