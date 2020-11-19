@@ -215,7 +215,7 @@ class _Etapa3State extends State<Etapa3> {
                       color: Color.fromRGBO(17, 0, 119, 1.0), width: 5),
                 ),
                 title: Text(
-                  "Você pode estar infectado pelo novo coronavírus, mesmo que não tenha nenhum sintoma.",
+                  "RELATÓRIO COMPLETO !!!\nVocê pode estar infectado pelo novo coronavírus, mesmo que não tenha nenhum sintoma.",
                   textAlign: TextAlign.justify,
                 ),
                 content: Column(
@@ -240,6 +240,17 @@ class _Etapa3State extends State<Etapa3> {
           }
           if (widget.checked2 == true) {
             await _update();
+            await showDialog(
+              context: (context),
+              builder: (context) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  side: BorderSide(
+                      color: Color.fromRGBO(17, 0, 119, 1.0), width: 5),
+                ),
+                title: Text("Relatório Completo !!"),
+              ),
+            );
             Navigator.of(context).popUntil((route) => route.isFirst);
           }
           if (widget.checked1 == false && widget.checked2 == false)

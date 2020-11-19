@@ -102,16 +102,16 @@ class _CadastroState extends State<Cadastro> {
                     style: TextStyle(fontSize: 24),
                   ),
                 ),
-                _txtField(txtNome, "Nome completo", TextInputType.name),
+                _txtField(txtNome, "Nome completo *", TextInputType.name),
                 _txtField(txtIdade, "Idade", TextInputType.number),
                 SizedBox(height: 15),
                 _dropdownSexo(),
-                _txtField(txtEmail, "Email", TextInputType.emailAddress),
+                _txtField(txtEmail, "Email *", TextInputType.emailAddress),
                 SizedBox(height: 15),
                 _dropdownCurso(),
                 _txtField(txtPeriodo, "Período", TextInputType.number),
                 _txtField(txtTelefone, "Telefone", TextInputType.phone),
-                _txtField(txtMatricula, "Matrícula", TextInputType.number),
+                _txtField(txtMatricula, "Matrícula *", TextInputType.number),
                 Container(
                   margin: EdgeInsets.only(top: 20, bottom: 20),
                   child: Divider(color: Colors.grey, thickness: 3),
@@ -147,8 +147,7 @@ class _CadastroState extends State<Cadastro> {
                     style: TextStyle(fontSize: 24),
                   ),
                 ),
-                _txtField(
-                    txtConfirmaSenha, "", TextInputType.text),
+                _txtField(txtConfirmaSenha, "", TextInputType.text),
                 _botaoConfirmar(),
               ],
             ),
@@ -182,22 +181,25 @@ class _CadastroState extends State<Cadastro> {
   Widget _txtField(
       TextEditingController txtController, String hint, TextInputType tipo) {
     bool esconder;
-    (hint == "")
-        ? esconder = true
-        : esconder = false;
+    (hint == "") ? esconder = true : esconder = false;
 
     return Container(
       margin: EdgeInsets.only(top: 15),
       child: TextField(
+        autofocus: true,
         inputFormatters: [
           if (hint == "Estado") UpperCase(),
           if (hint == "Cidade") UpperCase(),
           if (hint == "Bairro") UpperCase(),
-          if (hint == "Idade")
+          if (hint == "Idade" ||
+              hint == "Período" ||
+              hint == "Matrícula" ||
+              hint == "Telefone")
             FilteringTextInputFormatter.allow(RegExp(r"[0-9]")),
           if (hint == "Idade") LengthLimitingTextInputFormatter(2),
           if (hint == "Período") LengthLimitingTextInputFormatter(2),
           if (hint == "Matrícula") LengthLimitingTextInputFormatter(9),
+          if (hint == "Telefone") LengthLimitingTextInputFormatter(11),
         ],
         controller: txtController,
         style: TextStyle(fontSize: 20),
@@ -244,7 +246,7 @@ class _CadastroState extends State<Cadastro> {
               ),
               value: widget._currentS,
               hint: Text(
-                'Sexo',
+                'Sexo *',
                 style: TextStyle(color: Colors.black54, fontSize: 20),
               ),
               isDense: true,
@@ -350,42 +352,95 @@ class _CadastroState extends State<Cadastro> {
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
         onPressed: () async {
-          await authService.createEmailPasswd(txtEmail.text, txtSenha.text);
-          await _getUID(txtEmail.text, txtSenha.text);
-          await repository.addUsuario(
-            Usuario(
-              nome: txtNome.text,
-              email: txtEmail.text,
-              idade: int.parse(txtIdade.text),
-              sexo: (widget._currentS == 'Masculino') ? false : true,
-              curso: widget._currentCurso,
-              matricula: txtMatricula.text,
-              periodo: int.parse(txtPeriodo.text),
-              estado: txtEstado.text,
-              cidade: txtCidade.text,
-              bairro: txtBairro.text,
-              uid: uid,
-            ),
-          );
-          await showDialog(
-            context: (context),
-            builder: (context) => AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-                side: BorderSide(color: Colors.deepOrange, width: 10),
-              ),
-              title: Text("USUÁRIO CADASTRADO"),
-            ),
-          );
-          Navigator.pop(context);
+          (txtNome.text.isEmpty)
+              ? _dialog("Nome completo")
+              : (widget._currentS == null)
+                  ? _dialog("Sexo")
+                  : (txtEmail.text.isEmpty)
+                      ? _dialog("Email")
+                      : (txtMatricula.text.isEmpty)
+                          ? _dialog("Matrícula")
+                          : _verificao();
         },
       ),
     );
   }
 
+  _verificao() async {
+    if (txtSenha.text.length < 6 || txtConfirmaSenha.text.length < 6) {
+      await showDialog(
+        context: (context),
+        builder: (context) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+            side: BorderSide(color: Color.fromRGBO(17, 0, 119, 1.0), width: 5),
+          ),
+          title: Text("COLOQUE UMA SENHA DE PELO MENOS 6 DIGITOS"),
+        ),
+      );
+    } else {
+      if (txtSenha.text != txtConfirmaSenha.text) {
+        await showDialog(
+          context: (context),
+          builder: (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+              side:
+                  BorderSide(color: Color.fromRGBO(17, 0, 119, 1.0), width: 5),
+            ),
+            title: Text("SENHA INCORRETA"),
+          ),
+        );
+      } else {
+        await authService.createEmailPasswd(txtEmail.text, txtSenha.text);
+        await _getUID(txtEmail.text, txtSenha.text);
+        await repository.addUsuario(
+          Usuario(
+            nome: txtNome.text,
+            email: txtEmail.text,
+            idade: (txtIdade.text.isEmpty)? null:int.parse(txtIdade.text),
+            sexo: (widget._currentS == 'Masculino') ? false : true,
+            curso: widget._currentCurso,
+            matricula: txtMatricula.text,
+            periodo: (txtPeriodo.text.isEmpty)? null:int.parse(txtPeriodo.text),
+            estado: txtEstado.text,
+            cidade: txtCidade.text,
+            bairro: txtBairro.text,
+            uid: uid,
+          ),
+        );
+        await showDialog(
+          context: (context),
+          builder: (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+              side:
+                  BorderSide(color: Color.fromRGBO(17, 0, 119, 1.0), width: 5),
+            ),
+            title: Text("USUÁRIO CADASTRADO"),
+          ),
+        );
+        Navigator.pop(context);
+      }
+    }
+  }
+
   _getUID(String email, String passwd) async {
     dynamic result = await authService.signInEmailPasswd(email, passwd);
     uid = result.uid;
+  }
+
+  _dialog(String campoObrigatorio) async {
+    return showDialog(
+      context: (context),
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+          side: BorderSide(color: Color.fromRGBO(17, 0, 119, 1.0), width: 5),
+        ),
+        title: Text("Preencha o campo $campoObrigatorio"),
+      ),
+    );
   }
 }
 

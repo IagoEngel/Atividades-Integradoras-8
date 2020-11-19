@@ -90,6 +90,7 @@ class _TelaLoginState extends State<TelaLogin> {
       ),
       width: MediaQuery.of(context).size.width * 0.8138,
       child: TextField(
+        autofocus: true,
         controller: campoController,
         obscureText: (campoController == txtSenha) ? true : false,
         style: TextStyle(fontSize: 20),
@@ -182,7 +183,45 @@ class _TelaLoginState extends State<TelaLogin> {
               usuario.bairro = docs.documents[0].data['bairro'];
               usuario.uid = docs.documents[0].data['uid'];
             });
-            await _verificarRelatorioExistente(usuario.uid);
+            await _verificarRelatorioExistente(usuario.uid).then(
+              (QuerySnapshot docs) {
+                String dataAtual = DateTime.now().day.toString() +
+                    "/" +
+                    DateTime.now().month.toString() +
+                    "/" +
+                    DateTime.now().year.toString();
+                (docs.documents.isEmpty)
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Etapa1(usuario.uid)))
+                    : print("CATINGAS");
+                docs.documents.forEach((element) {
+                  if (element.data['data'] == dataAtual) {
+                    showDialog(
+                      context: (context),
+                      builder: (context) => AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          side: BorderSide(
+                              color: Color.fromRGBO(17, 0, 119, 1.0), width: 5),
+                        ),
+                        title: Text(
+                          "Relatório de $dataAtual já preenchido",
+                          textAlign: TextAlign.justify,
+                        ),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Etapa1(usuario.uid)));
+                  }
+                });
+              },
+            );
+            await _auth.signOff();
           } else {
             showDialog(
                 context: (context),
@@ -208,34 +247,9 @@ class _TelaLoginState extends State<TelaLogin> {
   }
 
   _verificarRelatorioExistente(String uid) {
-    String dataAtual = DateTime.now().day.toString() +
-        "/" +
-        DateTime.now().month.toString() +
-        "/" +
-        DateTime.now().year.toString();
-    String dataRelatorio;
-    Firestore.instance
+    return Firestore.instance
         .collection('relatorio')
         .where('uid', isEqualTo: uid)
-        .getDocuments().then((QuerySnapshot docs) {
-        });
-    if (dataAtual == dataRelatorio) {
-      showDialog(
-        context: (context),
-        builder: (context) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-            side: BorderSide(color: Color.fromRGBO(17, 0, 119, 1.0), width: 5),
-          ),
-          title: Text(
-            "Relatório de ${dataAtual} já preenchido",
-            textAlign: TextAlign.justify,
-          ),
-        ),
-      );
-    } else {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => Etapa1(uid)));
-    }
+        .getDocuments();
   }
 }
