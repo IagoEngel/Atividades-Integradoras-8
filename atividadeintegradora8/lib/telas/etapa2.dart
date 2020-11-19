@@ -111,6 +111,11 @@ class _Etapa2State extends State<Etapa2> {
           "Apresenta algum dos sintomas abaixo ?",
           style: TextStyle(fontSize: 20),
         ),
+        SizedBox(height: 6),
+        Text(
+          "Se não possuir nenhum sintoma, não há necessidade de marcar algo para continuar.",
+          style: TextStyle(fontSize: 15),
+        ),
         SizedBox(height: 20),
         _check(),
         SizedBox(height: 50),

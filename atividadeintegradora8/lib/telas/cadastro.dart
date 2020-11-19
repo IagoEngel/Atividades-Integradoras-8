@@ -29,7 +29,7 @@ class Cadastro extends StatefulWidget {
     'Veterinária',
   ];
   var _currentCurso;
-  var _currentS;
+  //var _currentS;
 
   @override
   _CadastroState createState() => _CadastroState();
@@ -104,8 +104,7 @@ class _CadastroState extends State<Cadastro> {
                 ),
                 _txtField(txtNome, "Nome completo *", TextInputType.name),
                 _txtField(txtIdade, "Idade", TextInputType.number),
-                SizedBox(height: 15),
-                _dropdownSexo(),
+                //_dropdownSexo(),
                 _txtField(txtEmail, "Email *", TextInputType.emailAddress),
                 SizedBox(height: 15),
                 _dropdownCurso(),
@@ -222,7 +221,7 @@ class _CadastroState extends State<Cadastro> {
     );
   }
 
-  Widget _dropdownSexo() {
+  /* Widget _dropdownSexo() {
     return FormField<String>(
       builder: (FormFieldState<String> state) {
         return InputDecorator(
@@ -272,7 +271,7 @@ class _CadastroState extends State<Cadastro> {
         );
       },
     );
-  }
+  } */
 
   Widget _dropdownCurso() {
     return FormField<String>(
@@ -354,9 +353,7 @@ class _CadastroState extends State<Cadastro> {
         onPressed: () async {
           (txtNome.text.isEmpty)
               ? _dialog("Nome completo")
-              : (widget._currentS == null)
-                  ? _dialog("Sexo")
-                  : (txtEmail.text.isEmpty)
+              : (txtEmail.text.isEmpty)
                       ? _dialog("Email")
                       : (txtMatricula.text.isEmpty)
                           ? _dialog("Matrícula")
@@ -399,7 +396,6 @@ class _CadastroState extends State<Cadastro> {
             nome: txtNome.text,
             email: txtEmail.text,
             idade: (txtIdade.text.isEmpty)? null:int.parse(txtIdade.text),
-            sexo: (widget._currentS == 'Masculino') ? false : true,
             curso: widget._currentCurso,
             matricula: txtMatricula.text,
             periodo: (txtPeriodo.text.isEmpty)? null:int.parse(txtPeriodo.text),

@@ -4,7 +4,6 @@ class Usuario {
   String nome;
   String email;
   int idade;
-  bool sexo;
   String curso;
   String matricula;
   int periodo;
@@ -20,7 +19,6 @@ class Usuario {
     this.nome,
     this.email,
     this.idade,
-    this.sexo,
     this.curso,
     this.matricula,
     this.periodo,
@@ -46,7 +44,6 @@ Usuario _UsuarioFromJson(Map<dynamic, dynamic> json){
     nome: json['nome'] as String,
     email: json['email'] as String,
     idade: json['idade'] as int,
-    sexo: json['sexo'] as bool,
     curso: json['curso'] as String,
     matricula: json['matricula'] as String,
     periodo: json['periodo'] as int,
@@ -61,7 +58,6 @@ Map<String, dynamic> _UsuarioToJson(Usuario instance) => <String, dynamic>{
   'nome': instance.nome,
   'email': instance.email,
   'idade': instance.idade,
-  'sexo': instance.sexo,
   'curso': instance.curso,
   'matricula': instance.matricula,
   'periodo': instance.periodo,

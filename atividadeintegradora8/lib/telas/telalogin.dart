@@ -174,7 +174,6 @@ class _TelaLoginState extends State<TelaLogin> {
               usuario.nome = docs.documents[0].data['nome'];
               usuario.email = docs.documents[0].data['email'];
               usuario.idade = docs.documents[0].data['idade'];
-              usuario.sexo = docs.documents[0].data['sexo'];
               usuario.curso = docs.documents[0].data['curso'];
               usuario.matricula = docs.documents[0].data['matricula'];
               usuario.periodo = docs.documents[0].data['periodo'];
