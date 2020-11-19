@@ -166,7 +166,20 @@ class _TelaLoginState extends State<TelaLogin> {
         onPressed: () async {
           dynamic result =
               await _auth.signInEmailPasswd(txtController.text, txtSenha.text);
-          if (txtController.text.isNotEmpty &&
+
+          if (_getEmailValido(txtController.text)) {
+            await showDialog(
+              context: (context),
+              builder: (context) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  side: BorderSide(
+                      color: Color.fromRGBO(17, 0, 119, 1.0), width: 5),
+                ),
+                title: Text("Email inexistente"),
+              ),
+            );
+          } else if (txtController.text.isNotEmpty &&
               txtSenha.text.isNotEmpty &&
               result != null) {
             Usuario usuario = new Usuario();
@@ -243,6 +256,17 @@ class _TelaLoginState extends State<TelaLogin> {
         .collection('usuario')
         .where('uid', isEqualTo: uid)
         .getDocuments();
+  }
+
+  _getEmailValido(String email) {
+    var aux = Firestore.instance
+        .collection('usuario')
+        .where('email', isEqualTo: email)
+        .getDocuments();
+    if (aux == null)
+      return false;
+    else
+      return true;
   }
 
   _verificarRelatorioExistente(String uid) {

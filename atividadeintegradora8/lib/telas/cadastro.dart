@@ -102,6 +102,14 @@ class _CadastroState extends State<Cadastro> {
                     style: TextStyle(fontSize: 24),
                   ),
                 ),
+                SizedBox(height: 5),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Campos com * são obrigatórios",
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ),
                 _txtField(txtNome, "Nome completo *", TextInputType.name),
                 _txtField(txtIdade, "Idade", TextInputType.number),
                 //_dropdownSexo(),
@@ -192,12 +200,12 @@ class _CadastroState extends State<Cadastro> {
           if (hint == "Bairro") UpperCase(),
           if (hint == "Idade" ||
               hint == "Período" ||
-              hint == "Matrícula" ||
+              hint == "Matrícula *" ||
               hint == "Telefone")
             FilteringTextInputFormatter.allow(RegExp(r"[0-9]")),
           if (hint == "Idade") LengthLimitingTextInputFormatter(2),
           if (hint == "Período") LengthLimitingTextInputFormatter(2),
-          if (hint == "Matrícula") LengthLimitingTextInputFormatter(9),
+          if (hint == "Matrícula *") LengthLimitingTextInputFormatter(9),
           if (hint == "Telefone") LengthLimitingTextInputFormatter(11),
         ],
         controller: txtController,
@@ -354,17 +362,28 @@ class _CadastroState extends State<Cadastro> {
           (txtNome.text.isEmpty)
               ? _dialog("Nome completo")
               : (txtEmail.text.isEmpty)
-                      ? _dialog("Email")
-                      : (txtMatricula.text.isEmpty)
-                          ? _dialog("Matrícula")
-                          : _verificao();
+                  ? _dialog("Email")
+                  : (txtMatricula.text.isEmpty)
+                      ? _dialog("Matrícula")
+                      : _verificao();
         },
       ),
     );
   }
 
   _verificao() async {
-    if (txtSenha.text.length < 6 || txtConfirmaSenha.text.length < 6) {
+    if (!txtEmail.text.contains("@") && !txtEmail.text.contains(".com")) {
+      await showDialog(
+        context: (context),
+        builder: (context) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+            side: BorderSide(color: Color.fromRGBO(17, 0, 119, 1.0), width: 5),
+          ),
+          title: Text("Email inválido"),
+        ),
+      );
+    } else if (txtSenha.text.length < 6 || txtConfirmaSenha.text.length < 6) {
       await showDialog(
         context: (context),
         builder: (context) => AlertDialog(
@@ -395,10 +414,11 @@ class _CadastroState extends State<Cadastro> {
           Usuario(
             nome: txtNome.text,
             email: txtEmail.text,
-            idade: (txtIdade.text.isEmpty)? null:int.parse(txtIdade.text),
+            idade: (txtIdade.text.isEmpty) ? null : int.parse(txtIdade.text),
             curso: widget._currentCurso,
             matricula: txtMatricula.text,
-            periodo: (txtPeriodo.text.isEmpty)? null:int.parse(txtPeriodo.text),
+            periodo:
+                (txtPeriodo.text.isEmpty) ? null : int.parse(txtPeriodo.text),
             estado: txtEstado.text,
             cidade: txtCidade.text,
             bairro: txtBairro.text,
