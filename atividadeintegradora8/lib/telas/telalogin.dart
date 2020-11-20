@@ -264,9 +264,9 @@ class _TelaLoginState extends State<TelaLogin> {
         .where('email', isEqualTo: email)
         .getDocuments();
     if (aux == null)
-      return false;
-    else
       return true;
+    else
+      return false;
   }
 
   _verificarRelatorioExistente(String uid) {

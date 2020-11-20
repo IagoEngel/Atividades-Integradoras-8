@@ -372,7 +372,7 @@ class _CadastroState extends State<Cadastro> {
   }
 
   _verificao() async {
-    if (!txtEmail.text.contains("@") && !txtEmail.text.contains(".com")) {
+    if (!txtEmail.text.contains("@") || !txtEmail.text.contains(".com")) {
       await showDialog(
         context: (context),
         builder: (context) => AlertDialog(
